@@ -3,22 +3,20 @@ import { Card, Suit } from './card.model'
 
 export type PlayerId = string & Brand<'player_id'>
 export type PlayerIndex = 1 | 2 | 3 | 4
+export type Hokm = Suit & Brand<'hokm'>
 
-type InHandCard = Card & Brand<'in_hand'>
-type Hokm = Suit & Brand<'hokm'>
-
-interface IPlayer {
+export interface Player {
   id: PlayerId
   index: PlayerIndex
   cards: Card[]
-  play(card: Card, playedCards: Card[]): IPlayer
+  play(card: Card, playedCards: Card[]): Player
 }
 
-interface IHakem<H extends Hokm | null> extends IPlayer {
-  hokm: H
-  setHokm(suit: Suit): IHakem<Hokm>
+export interface Hakem extends Player {
+  setHokm(suit: Suit): Hokm
 }
 
+type InHandCard = Card & Brand<'in_hand'>
 abstract class AbstractPlayer {
   constructor(
     public readonly id: PlayerId,
@@ -57,38 +55,22 @@ abstract class AbstractPlayer {
   }
 }
 
-export class Player extends AbstractPlayer implements IPlayer {
+export class PlayerImp extends AbstractPlayer implements Player {
   play(card: Card, playedCards: Card[]) {
     const newCards = this.playCard(card, playedCards)
 
-    return new Player(this.id, this.index, newCards)
+    return new PlayerImp(this.id, this.index, newCards)
   }
 }
 
-export class Hakem<H extends Hokm | null>
-  extends AbstractPlayer
-  implements IHakem<H>
-{
-  constructor(
-    id: PlayerId,
-    index: PlayerIndex,
-    cards: Card[],
-    public readonly hokm: H,
-  ) {
-    super(id, index, cards)
-  }
-
+export class HakemImp extends AbstractPlayer implements Hakem {
   play(card: Card, playedCards: Card[]) {
     const newCards = this.playCard(card, playedCards)
 
-    return new Hakem(this.id, this.index, newCards, this.hokm)
+    return new HakemImp(this.id, this.index, newCards)
   }
 
   setHokm(suit: Suit) {
-    if (this.hokm !== null) {
-      throw new Error('CANT_CHANGE_HOKM')
-    }
-
-    return new Hakem(this.id, this.index, this.cards, suit as Hokm)
+    return suit as Hokm
   }
 }

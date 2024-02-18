@@ -16,12 +16,13 @@ export enum CardValue {
   ACE,
 }
 
-interface ICard {
+export interface Card {
   value: CardValue
   suit: Suit
+  isEqual(card: Card): boolean
 }
 
-export class Card implements ICard {
+export class CardImp implements Card {
   constructor(
     readonly value: CardValue,
     readonly suit: Suit,
