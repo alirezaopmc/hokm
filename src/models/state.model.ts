@@ -52,11 +52,11 @@ export interface EndGameState {
   players: PlayedGroup
   startingPlayerIndex: PlayerIndex
   Hokm: Hokm
-  SetScore: ScoreBoard
+  SetScore: EndScoreBoard
   gameScore: EndScoreBoard
 }
 
-export type RoundState =
+export type State =
   | NewSetState
   | NewRoundState
   | PlayingRoundState
