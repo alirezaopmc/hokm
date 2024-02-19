@@ -1,18 +1,23 @@
-import { PlayingGroup, UnplayedGroup } from './group.model'
+import { PlayedGroup, PlayingGroup, UnplayedGroup } from './group.model'
 import { Hokm, PlayerIndex } from './player.model'
-// import { WholeNumber } from './whole-number'
+import { EndScoreBoard, ScoreBoard } from './score.model'
 
-// interface Score {
-//   team1: WholeNumber
-//   team2: WholeNumber
-//   target: WholeNumber
-// }
+export interface NewSetState {
+  __state: 'NEW_SET'
+  players: UnplayedGroup
+  startingPlayerIndex: PlayerIndex
+  Hokm: null
+  SetScore: ScoreBoard
+  gameScore: ScoreBoard
+}
 
 export interface NewRoundState {
   __state: 'NEW_ROUND'
   players: UnplayedGroup
   startingPlayerIndex: PlayerIndex
-  Hokm: null
+  Hokm: Hokm
+  SetScore: ScoreBoard
+  gameScore: ScoreBoard
 }
 
 export interface PlayingRoundState {
@@ -20,16 +25,41 @@ export interface PlayingRoundState {
   players: PlayingGroup
   startingPlayerIndex: PlayerIndex
   Hokm: Hokm
+  SetScore: ScoreBoard
+  gameScore: ScoreBoard
 }
 
 export interface EndRoundState {
   __state: 'END_ROUND'
-  players: PlayingGroup
+  players: PlayedGroup
   startingPlayerIndex: PlayerIndex
   Hokm: Hokm
+  SetScore: ScoreBoard
+  gameScore: ScoreBoard
+}
+
+export interface EndSetState {
+  __state: 'END_SET'
+  players: PlayedGroup
+  startingPlayerIndex: PlayerIndex
+  Hokm: Hokm
+  SetScore: EndScoreBoard
+  gameScore: ScoreBoard
+}
+
+export interface EndGameState {
+  __state: 'END_Game'
+  players: PlayedGroup
+  startingPlayerIndex: PlayerIndex
+  Hokm: Hokm
+  SetScore: ScoreBoard
+  gameScore: EndScoreBoard
 }
 
 export type RoundState =
+  | NewSetState
   | NewRoundState
   | PlayingRoundState
   | EndRoundState
+  | EndSetState
+  | EndGameState
