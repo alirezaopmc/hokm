@@ -1,7 +1,10 @@
+import { Player } from './player.model'
+
 export type Suit = 'CLUBS' | 'DIAMONDS' | 'HEARTS' | 'SPADES'
 
 export enum CardValue {
-  TWO = 2,
+  ACE = 1,
+  TWO,
   THREE,
   FOUR,
   FIVE,
@@ -13,22 +16,81 @@ export enum CardValue {
   JACK,
   QUEEN,
   KING,
-  ACE,
 }
 
-export interface Card {
+interface CardBase {
   value: CardValue
   suit: Suit
-  isEqual(card: Card): boolean
 }
 
-export class CardImp implements Card {
+export interface UnassignedCard extends CardBase {
+  status: 'UNASSIGNED'
+  assign(owner: Player): InHandCard
+  remove(): RemovedCard
+}
+
+export interface RemovedCard extends CardBase {
+  status: 'REMOVED'
+}
+
+export interface InHandCard extends CardBase {
+  status: 'IN_HAND'
+  owner: Player
+  play(): InMiddleCard
+}
+
+export interface InMiddleCard extends CardBase {
+  status: 'IN_MIDDLE'
+  owner: Player
+  collect(): CollectedCard
+}
+
+export interface CollectedCard extends CardBase {
+  status: 'COLLECTED'
+  owner: Player
+}
+
+export type card =
+  | UnassignedCard
+  | RemovedCard
+  | InHandCard
+  | InMiddleCard
+  | CollectedCard
+
+export class InHandCardImp implements InHandCard {
+  public readonly status = 'IN_HAND'
+
   constructor(
-    readonly value: CardValue,
-    readonly suit: Suit,
+    public readonly value: CardValue,
+    public readonly suit: Suit,
+    public readonly owner: Player,
   ) {}
 
-  isEqual(card: Card) {
-    return this.suit === card.suit && this.value === card.value
+  play() {
+    return new InMiddleCardImp(this.value, this.suit, this.owner)
   }
+}
+
+export class InMiddleCardImp implements InMiddleCard {
+  public readonly status = 'IN_MIDDLE'
+
+  constructor(
+    public readonly value: CardValue,
+    public readonly suit: Suit,
+    public readonly owner: Player,
+  ) {}
+
+  collect() {
+    return new CollectedCardImp(this.value, this.suit, this.owner)
+  }
+}
+
+export class CollectedCardImp implements CollectedCard {
+  readonly status = 'COLLECTED'
+
+  constructor(
+    public readonly value: CardValue,
+    public readonly suit: Suit,
+    public readonly owner: Player,
+  ) {}
 }

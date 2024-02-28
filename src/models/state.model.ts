@@ -1,11 +1,11 @@
+import { Deck } from './deck.model'
 import { PlayedGroup, PlayingGroup, UnplayedGroup } from './group.model'
-import { Hokm, PlayerIndex } from './player.model'
+import { Hokm } from './player.model'
 import { EndScoreBoard, ScoreBoard } from './score.model'
 
 export interface NewSetState {
   __state: 'NEW_SET'
-  players: UnplayedGroup
-  startingPlayerIndex: PlayerIndex
+  deck: Deck
   Hokm: null
   SetScore: ScoreBoard
   gameScore: ScoreBoard
