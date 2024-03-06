@@ -1,6 +1,8 @@
+import { Brand } from './brand'
 import { Player } from './player.model'
 
 export type Suit = 'CLUBS' | 'DIAMONDS' | 'HEARTS' | 'SPADES'
+export type Hokm = Suit & Brand<'hokm'>
 
 export enum CardValue {
   ACE = 1,
@@ -50,7 +52,7 @@ export interface CollectedCard extends CardBase {
   owner: Player
 }
 
-export type card =
+export type Card =
   | UnassignedCard
   | RemovedCard
   | InHandCard

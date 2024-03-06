@@ -1,4 +1,5 @@
-import { Brand } from "./brand";
-import { card } from "./card.model";
+import { Brand } from './brand'
+import { Card } from './card.model'
+import { FixedSizeArray } from './state.model'
 
-export type Deck = card[] & Brand<"deck">
+export type Deck = FixedSizeArray<Card, 52> & Brand<'deck'>
