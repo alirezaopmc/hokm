@@ -1,98 +1,66 @@
+import { WholeNumber } from '../utils/wholeNumber'
 import { Brand } from './brand'
-import { Player } from './player.model'
+import { User } from './user.model'
 
-export type Suit = 'CLUBS' | 'DIAMONDS' | 'HEARTS' | 'SPADES'
+export const suits = ['CLUBS', 'DIAMONDS', 'HEARTS', 'SPADES'] as const
+export const cardValues = [
+  'ACE',
+  'TWO',
+  'THREE',
+  'FOUR',
+  'FIVE',
+  'SIX',
+  'SEVEN',
+  'EIGHT',
+  'NINE',
+  'TEN',
+  'JACK',
+  'QUEEN',
+  'KING',
+] as const
+
+export type Suit = (typeof suits)[number]
 export type Hokm = Suit & Brand<'hokm'>
+export type CardValue = (typeof cardValues)[number]
 
-export enum CardValue {
-  ACE = 1,
-  TWO,
-  THREE,
-  FOUR,
-  FIVE,
-  SIX,
-  SEVEN,
-  EIGHT,
-  NINE,
-  TEN,
-  JACK,
-  QUEEN,
-  KING,
+interface CardBase<V extends CardValue, S extends Suit> {
+  readonly value: V
+  readonly suit: S
 }
 
-interface CardBase {
-  value: CardValue
-  suit: Suit
-}
-
-export interface UnassignedCard extends CardBase {
+export interface UnassignedCard<V extends CardValue, S extends Suit>
+  extends CardBase<V, S> {
   status: 'UNASSIGNED'
-  assign(owner: Player): InHandCard
-  remove(): RemovedCard
 }
 
-export interface RemovedCard extends CardBase {
+export interface RemovedCard<V extends CardValue, S extends Suit>
+  extends CardBase<V, S> {
   status: 'REMOVED'
 }
 
-export interface InHandCard extends CardBase {
+export interface InHandCard<V extends CardValue, S extends Suit>
+  extends CardBase<V, S> {
   status: 'IN_HAND'
-  owner: Player
-  play(): InMiddleCard
+  owner: User
 }
 
-export interface InMiddleCard extends CardBase {
+export interface InMiddleCard<V extends CardValue, S extends Suit>
+  extends CardBase<V, S> {
   status: 'IN_MIDDLE'
-  owner: Player
-  collect(): CollectedCard
+  owner: User
+  moveNumber: WholeNumber
 }
 
-export interface CollectedCard extends CardBase {
+export interface CollectedCard<V extends CardValue, S extends Suit>
+  extends CardBase<V, S> {
   status: 'COLLECTED'
-  owner: Player
+  owner: User
+  moveNumber: WholeNumber
 }
 
-export type Card =
-  | UnassignedCard
-  | RemovedCard
-  | InHandCard
-  | InMiddleCard
-  | CollectedCard
-
-export class InHandCardImp implements InHandCard {
-  public readonly status = 'IN_HAND'
-
-  constructor(
-    public readonly value: CardValue,
-    public readonly suit: Suit,
-    public readonly owner: Player,
-  ) {}
-
-  play() {
-    return new InMiddleCardImp(this.value, this.suit, this.owner)
-  }
-}
-
-export class InMiddleCardImp implements InMiddleCard {
-  public readonly status = 'IN_MIDDLE'
-
-  constructor(
-    public readonly value: CardValue,
-    public readonly suit: Suit,
-    public readonly owner: Player,
-  ) {}
-
-  collect() {
-    return new CollectedCardImp(this.value, this.suit, this.owner)
-  }
-}
-
-export class CollectedCardImp implements CollectedCard {
-  readonly status = 'COLLECTED'
-
-  constructor(
-    public readonly value: CardValue,
-    public readonly suit: Suit,
-    public readonly owner: Player,
-  ) {}
-}
+export type Card<V extends CardValue, S extends Suit> =
+  | UnassignedCard<V, S>
+  | RemovedCard<V, S>
+  | InHandCard<V, S>
+  | InMiddleCard<V, S>
+  | CollectedCard<V, S>

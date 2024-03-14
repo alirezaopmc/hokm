@@ -1,28 +1,17 @@
-import { Card, Hokm } from './card.model'
+import { Suit } from './card.model'
 import { Deck } from './deck.model'
-import { Player } from './player.model'
-import { ScoreBoard } from './score.model'
+import { User } from './user.model'
 
-export type FixedSizeArray<T, N extends number> = N extends 0
-  ? never[]
-  : {
-      0: T
-      length: N
-    } & ReadonlyArray<T>
-
-type PlayerCounts = 2 | 3 | 4 | 5 | 6;
-
-export interface State {
+export interface StartingState {
   deck: Deck
-  hakem: Player
-  hokm: Hokm | null
-  SetScore: ScoreBoard
-  gameScore: ScoreBoard
+  hakem: User
+  hokm: null
 }
 
-export interface Game<N extends PlayerCounts> {
-  id: string;
-  players: FixedSizeArray<Player, N>
-  state: State;
-  history: FixedSizeArray<Card, N>[]
+export interface PlayingState {
+  deck: Deck
+  hakem: User
+  hokm: Suit
 }
+
+export type State = StartingState | PlayingState
