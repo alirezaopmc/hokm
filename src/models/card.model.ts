@@ -1,5 +1,4 @@
 import { WholeNumber } from '../utils/wholeNumber'
-import { Brand } from './brand'
 import { User } from './user.model'
 
 export const suits = ['CLUBS', 'DIAMONDS', 'HEARTS', 'SPADES'] as const
@@ -20,47 +19,41 @@ export const cardValues = [
 ] as const
 
 export type Suit = (typeof suits)[number]
-export type Hokm = Suit & Brand<'hokm'>
 export type CardValue = (typeof cardValues)[number]
+export type CardName = `${CardValue}_${Suit}`
 
-interface CardBase<V extends CardValue, S extends Suit> {
-  readonly value: V
-  readonly suit: S
+interface CardBase<N extends CardName> {
+  readonly name: N
 }
 
-export interface UnassignedCard<V extends CardValue, S extends Suit>
-  extends CardBase<V, S> {
+export interface UnassignedCard<N extends CardName> extends CardBase<N> {
   status: 'UNASSIGNED'
 }
 
-export interface RemovedCard<V extends CardValue, S extends Suit>
-  extends CardBase<V, S> {
+export interface RemovedCard<N extends CardName> extends CardBase<N> {
   status: 'REMOVED'
 }
 
-export interface InHandCard<V extends CardValue, S extends Suit>
-  extends CardBase<V, S> {
+export interface InHandCard<N extends CardName> extends CardBase<N> {
   status: 'IN_HAND'
   owner: User
 }
 
-export interface InMiddleCard<V extends CardValue, S extends Suit>
-  extends CardBase<V, S> {
+export interface InMiddleCard<N extends CardName> extends CardBase<N> {
   status: 'IN_MIDDLE'
   owner: User
   moveNumber: WholeNumber
 }
 
-export interface CollectedCard<V extends CardValue, S extends Suit>
-  extends CardBase<V, S> {
+export interface CollectedCard<N extends CardName> extends CardBase<N> {
   status: 'COLLECTED'
   owner: User
   moveNumber: WholeNumber
 }
 
-export type Card<V extends CardValue, S extends Suit> =
-  | UnassignedCard<V, S>
-  | RemovedCard<V, S>
-  | InHandCard<V, S>
-  | InMiddleCard<V, S>
-  | CollectedCard<V, S>
+export type Card<N extends CardName> =
+  | UnassignedCard<N>
+  | RemovedCard<N>
+  | InHandCard<N>
+  | InMiddleCard<N>
+  | CollectedCard<N>
