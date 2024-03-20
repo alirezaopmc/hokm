@@ -26,11 +26,13 @@ interface CardBase<N extends CardName> {
   readonly name: N
 }
 
-export interface UnassignedCard<N extends CardName = CardName> extends CardBase<N> {
+export interface UnassignedCard<N extends CardName = CardName>
+  extends CardBase<N> {
   status: 'UNASSIGNED'
 }
 
-export interface RemovedCard<N extends CardName = CardName> extends CardBase<N> {
+export interface RemovedCard<N extends CardName = CardName>
+  extends CardBase<N> {
   status: 'REMOVED'
 }
 
@@ -39,13 +41,15 @@ export interface InHandCard<N extends CardName = CardName> extends CardBase<N> {
   owner: User
 }
 
-export interface InMiddleCard<N extends CardName = CardName> extends CardBase<N> {
+export interface InMiddleCard<N extends CardName = CardName>
+  extends CardBase<N> {
   status: 'IN_MIDDLE'
   owner: User
   moveNumber: WholeNumber
 }
 
-export interface CollectedCard<N extends CardName = CardName> extends CardBase<N> {
+export interface CollectedCard<N extends CardName = CardName>
+  extends CardBase<N> {
   status: 'COLLECTED'
   owner: User
   moveNumber: WholeNumber
