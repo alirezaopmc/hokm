@@ -7,7 +7,7 @@ import { State } from './state.model'
 export type GameId = string & Brand<'game_id'>
 export type PlayerCounts = 2 | 3 | 4 | 5 | 6
 
-export interface Game<N extends PlayerCounts> {
+export interface Game<N extends PlayerCounts = PlayerCounts> {
   id: GameId
   users: FixedArray<User, N>
   states: NonEmptyArray<State>
